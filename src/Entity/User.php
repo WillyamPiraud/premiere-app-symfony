@@ -6,6 +6,8 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Rollerworks\Component\PasswordStrength\Validator\Constraints as RollerworksPassword;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -25,12 +27,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[RollerworksPassword\PasswordRequirements(
+        requireLetters: true,
+        minLength: 8,
+        requireCaseDiff: true)]
     private ?string $password = null;
 
     #[ORM\Column(length: 40)]
     private ?string $nom = null;
 
     #[ORM\Column(length: 40)]
+    #[Assert\Length(
+        min: 3,
+        max: 15,
+        minMessage: 'Votre prénom doit comporter au moins {{ limit }} caractères',
+        maxMessage: 'Votre prénom doit comporter au maximum {{ limit }} caractères',
+    )]
     private ?string $prenom = null;
 
     public function getId(): ?int

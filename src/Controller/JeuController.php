@@ -18,4 +18,5 @@ class JeuController extends AbstractController
             'jeux' => $jeux
         ]);
     }
+
 }
